@@ -224,10 +224,7 @@ func encodeInnerClientHelloReorderOuterExts(inner *clientHelloMsg, maxNameLength
 
 	var paddingLen int
 	if inner.serverName != "" {
-		paddingLen = maxNameLength - len(inner.serverName)
-		if paddingLen < 0 {
-			paddingLen = 0
-		}
+		paddingLen = max(maxNameLength-len(inner.serverName), 0)
 	} else {
 		paddingLen = maxNameLength + 9
 	}

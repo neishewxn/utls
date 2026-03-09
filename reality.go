@@ -157,10 +157,7 @@ func newRateLimitedConn(conn net.Conn, limit *RealityLimitFallback) net.Conn {
 		return conn
 	}
 
-	burstBytesPerSec := limit.BurstBytesPerSec
-	if burstBytesPerSec < limit.BytesPerSec {
-		burstBytesPerSec = limit.BytesPerSec
-	}
+	burstBytesPerSec := max(limit.BurstBytesPerSec, limit.BytesPerSec)
 
 	return &rateLimitedConn{
 		Conn:   conn,
@@ -537,11 +534,9 @@ func RealityServer(ctx context.Context, conn net.Conn, config *RealityConfig) (*
 		mutex.Unlock()
 		if hs.c.out.handshakeLen[0] == 0 { // if the target sent an incorrect Server Hello, or before that
 			if hs.c.conn == conn { // if we processed the Client Hello successfully but the target did not
-				waitGroup.Add(1)
-				go func() {
+				waitGroup.Go(func() {
 					io.Copy(target, newRateLimitedConn(underlying, &config.LimitFallbackUpload))
-					waitGroup.Done()
-				}()
+				})
 			}
 			conn.Write(s2cSaved)
 			io.Copy(underlying, newRateLimitedConn(target, &config.LimitFallbackDownload))

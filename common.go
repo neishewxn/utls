@@ -1278,12 +1278,7 @@ func (c *Config) curvePreferences(version uint16) []CurveID {
 }
 
 func (c *Config) supportsCurve(version uint16, curve CurveID) bool {
-	for _, cc := range c.curvePreferences(version) {
-		if cc == curve {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(c.curvePreferences(version), curve)
 }
 
 // mutualVersion returns the protocol version to use given the advertised
@@ -1745,12 +1740,7 @@ func supportedSignatureAlgorithms() []SignatureScheme {
 }
 
 func isSupportedSignatureAlgorithm(sigAlg SignatureScheme, supportedSignatureAlgorithms []SignatureScheme) bool {
-	for _, s := range supportedSignatureAlgorithms {
-		if s == sigAlg {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(supportedSignatureAlgorithms, sigAlg)
 }
 
 // CertificateVerificationError is returned when certificate verification fails during the handshake.

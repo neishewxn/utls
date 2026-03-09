@@ -455,7 +455,7 @@ func TestTLSUniqueMatches(t *testing.T) {
 	defer close(parentDone)
 	go func() {
 		defer close(childDone)
-		for i := 0; i < 2; i++ {
+		for range 2 {
 			sconn, err := ln.Accept()
 			if err != nil {
 				t.Error(err)
@@ -700,7 +700,7 @@ func TestConnCloseWrite(t *testing.T) {
 	go func() { errChan <- serverCloseWrite() }()
 	go func() { errChan <- clientCloseWrite() }()
 
-	for i := 0; i < 2; i++ {
+	for range 2 {
 		select {
 		case err := <-errChan:
 			if err != nil {
@@ -774,7 +774,7 @@ func TestWarningAlertFlood(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < maxUselessRecords+1; i++ {
+	for range maxUselessRecords + 1 {
 		conn.sendAlert(alertNoRenegotiation)
 	}
 
@@ -959,7 +959,7 @@ func throughput(b *testing.B, version uint16, totalBytes int64, dynamicRecordSiz
 
 	go func() {
 		buf := make([]byte, bufsize)
-		for i := 0; i < N; i++ {
+		for range N {
 			sconn, err := ln.Accept()
 			if err != nil {
 				// panic rather than synchronize to avoid benchmark overhead
@@ -987,12 +987,12 @@ func throughput(b *testing.B, version uint16, totalBytes int64, dynamicRecordSiz
 
 	buf := make([]byte, bufsize)
 	chunks := int(math.Ceil(float64(totalBytes) / float64(len(buf))))
-	for i := 0; i < N; i++ {
+	for range N {
 		conn, err := Dial("tcp", ln.Addr().String(), clientConfig)
 		if err != nil {
 			b.Fatal(err)
 		}
-		for j := 0; j < chunks; j++ {
+		for range chunks {
 			_, err := conn.Write(buf)
 			if err != nil {
 				b.Fatal(err)
@@ -1035,10 +1035,7 @@ func (c *slowConn) Write(p []byte) (int, error) {
 	wrote := 0
 	for wrote < len(p) {
 		time.Sleep(100 * time.Microsecond)
-		allowed := int(time.Since(t0).Seconds()*float64(c.bps)) / 8
-		if allowed > len(p) {
-			allowed = len(p)
-		}
+		allowed := min(int(time.Since(t0).Seconds()*float64(c.bps))/8, len(p))
 		if wrote < allowed {
 			n, err := c.Conn.Write(p[wrote:allowed])
 			wrote += n
@@ -1057,7 +1054,7 @@ func latency(b *testing.B, version uint16, bps int, dynamicRecordSizingDisabled 
 	N := b.N
 
 	go func() {
-		for i := 0; i < N; i++ {
+		for range N {
 			sconn, err := ln.Accept()
 			if err != nil {
 				// panic rather than synchronize to avoid benchmark overhead
@@ -1081,7 +1078,7 @@ func latency(b *testing.B, version uint16, bps int, dynamicRecordSizingDisabled 
 	buf := make([]byte, 16384)
 	peek := make([]byte, 1)
 
-	for i := 0; i < N; i++ {
+	for range N {
 		conn, err := Dial("tcp", ln.Addr().String(), clientConfig)
 		if err != nil {
 			b.Fatal(err)
@@ -1779,7 +1776,6 @@ func testVerifyCertificates(t *testing.T, version uint16) {
 	rootCAs.AddCert(issuer)
 
 	for _, test := range tests {
-		test := test
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 

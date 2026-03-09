@@ -2066,8 +2066,7 @@ func TestHandshakeContextHierarchy(t *testing.T) {
 	clientErr := make(chan error, 1)
 	clientConfig := testConfig.Clone()
 	serverConfig := testConfig.Clone()
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx := t.Context()
 	key := struct{}{}
 	ctx = context.WithValue(ctx, key, true)
 	go func() {

@@ -8,13 +8,13 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"reflect"
 	"testing"
 )
 
-func assertEquality(t *testing.T, fieldName string, expected, actual interface{}) {
+func assertEquality(t *testing.T, fieldName string, expected, actual any) {
 	if kActual, ok := actual.(KeyShare); ok {
 		kExpected := expected.(KeyShare)
 		assertEquality(t, fieldName, kExpected.Group, kActual.Group)
@@ -44,11 +44,11 @@ func assertEquality(t *testing.T, fieldName string, expected, actual interface{}
 
 func compareClientHelloFields(t *testing.T, fieldName string, expected, actual *PubClientHelloMsg) {
 	rExpected := reflect.ValueOf(expected)
-	if rExpected.Kind() != reflect.Ptr || rExpected.Elem().Kind() != reflect.Struct {
+	if rExpected.Kind() != reflect.Pointer || rExpected.Elem().Kind() != reflect.Struct {
 		t.Errorf("Error using reflect to compare Hello fields")
 	}
 	rActual := reflect.ValueOf(actual)
-	if rActual.Kind() != reflect.Ptr || rActual.Elem().Kind() != reflect.Struct {
+	if rActual.Kind() != reflect.Pointer || rActual.Elem().Kind() != reflect.Struct {
 		t.Errorf("Error using reflect to compare Hello fields")
 	}
 
@@ -90,11 +90,11 @@ func checkUTLSExtensionsEquality(t *testing.T, expected, actual TLSExtension) {
 		t.Errorf("extension types length not equal\nexpected: %#v\ngot: %#v", expected, actual)
 	}
 
-	actualBytes, err := ioutil.ReadAll(actual)
+	actualBytes, err := io.ReadAll(actual)
 	if err != nil {
 		t.Errorf("got error: %v; expected to succeed", err)
 	}
-	expectedBytes, err := ioutil.ReadAll(expected)
+	expectedBytes, err := io.ReadAll(expected)
 	if err != nil {
 		t.Errorf("got error: %v; expected to succeed", err)
 	}

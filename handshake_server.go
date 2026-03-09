@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"hash"
 	"io"
+	"slices"
 	"time"
 
 	"github.com/neishewxn/utls/internal/byteorder"
@@ -211,14 +212,7 @@ func (hs *serverHandshakeState) processClientHello() error {
 	hs.hello = new(serverHelloMsg)
 	hs.hello.vers = c.vers
 
-	foundCompression := false
-	// We only support null compression, so check that the client offered it.
-	for _, compression := range hs.clientHello.compressionMethods {
-		if compression == compressionNone {
-			foundCompression = true
-			break
-		}
-	}
+	foundCompression := slices.Contains(hs.clientHello.compressionMethods, compressionNone)
 
 	if !foundCompression {
 		c.sendAlert(alertHandshakeFailure)
@@ -356,13 +350,7 @@ func supportsECDHE(c *Config, version uint16, supportedCurves []CurveID, support
 		}
 	}
 
-	supportsPointFormat := false
-	for _, pointFormat := range supportedPoints {
-		if pointFormat == pointFormatUncompressed {
-			supportsPointFormat = true
-			break
-		}
-	}
+	supportsPointFormat := slices.Contains(supportedPoints, pointFormatUncompressed)
 	// Per RFC 8422, Section 5.1.2, if the Supported Point Formats extension is
 	// missing, uncompressed points are supported. If supportedPoints is empty,
 	// the extension must be missing, as an empty extension body is rejected by
@@ -490,14 +478,7 @@ func (hs *serverHandshakeState) checkForResumption() error {
 		return nil
 	}
 
-	cipherSuiteOk := false
-	// Check that the client is still offering the ciphersuite in the session.
-	for _, id := range hs.clientHello.cipherSuites {
-		if id == sessionState.cipherSuite {
-			cipherSuiteOk = true
-			break
-		}
-	}
+	cipherSuiteOk := slices.Contains(hs.clientHello.cipherSuites, sessionState.cipherSuite)
 	if !cipherSuiteOk {
 		return nil
 	}

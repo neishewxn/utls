@@ -489,7 +489,7 @@ type PubCipherSuite struct {
 	Ka     func(version uint16) keyAgreement
 	// flags is a bitmask of the suite* values, above.
 	Flags  int
-	Cipher func(key, iv []byte, isRead bool) interface{}
+	Cipher func(key, iv []byte, isRead bool) any
 	Mac    func(macKey []byte) hash.Hash
 	Aead   func(key, fixedNonce []byte) aead
 }

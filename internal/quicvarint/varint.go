@@ -117,7 +117,7 @@ func AppendWithLen(b []byte, i uint64, length protocol.ByteCount) []byte {
 	for j := protocol.ByteCount(1); j < length-l; j++ {
 		b = append(b, 0)
 	}
-	for j := protocol.ByteCount(0); j < l; j++ {
+	for j := range l {
 		b = append(b, uint8(i>>(8*(l-1-j))))
 	}
 	return b

@@ -779,7 +779,7 @@ func panicOnNil(caller string, params ...any) {
 }
 
 func anyTrue[T any](slice []T, predicate func(i int, t *T) bool) bool {
-	for i := 0; i < len(slice); i++ {
+	for i := range slice {
 		if predicate(i, &slice[i]) {
 			return true
 		}
@@ -788,7 +788,7 @@ func anyTrue[T any](slice []T, predicate func(i int, t *T) bool) bool {
 }
 
 func allTrue[T any](slice []T, predicate func(i int, t *T) bool) bool {
-	for i := 0; i < len(slice); i++ {
+	for i := range slice {
 		if !predicate(i, &slice[i]) {
 			return false
 		}
@@ -806,7 +806,7 @@ func sliceEq[T comparable](sliceA []T, sliceB []T) bool {
 	if len(sliceA) != len(sliceB) {
 		return false
 	}
-	for i := 0; i < len(sliceA); i++ {
+	for i := range sliceA {
 		if sliceA[i] != sliceB[i] {
 			return false
 		}

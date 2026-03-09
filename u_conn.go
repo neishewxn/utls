@@ -773,7 +773,7 @@ func MakeConnWithCompleteHandshake(tcpConn net.Conn, version uint16, cipherSuite
 			keysFromMasterSecret(version, cs, masterSecret, clientRandom, serverRandom,
 				cs.macLen, cs.keyLen, cs.ivLen)
 
-		var clientCipher, serverCipher interface{}
+		var clientCipher, serverCipher any
 		var clientHash, serverHash hash.Hash
 		if cs.cipher != nil {
 			clientCipher = cs.cipher(clientKey, clientIV, true /* for reading */)

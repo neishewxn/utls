@@ -455,13 +455,7 @@ func (c *Conn) loadSession(hello *clientHelloMsg) (
 	session = cs.session
 
 	// Check that version used for the previous session is still valid.
-	versOk := false
-	for _, v := range hello.supportedVersions {
-		if v == session.version {
-			versOk = true
-			break
-		}
-	}
+	versOk := slices.Contains(hello.supportedVersions, session.version)
 	if !versOk {
 		return nil, nil, nil, nil
 	}
@@ -541,11 +535,8 @@ func (c *Conn) loadSession(hello *clientHelloMsg) (
 		// For 0-RTT, the cipher suite has to match exactly, and we need to be
 		// offering the same ALPN.
 		if session.EarlyData && mutualCipherSuiteTLS13(hello.cipherSuites, session.cipherSuite) != nil {
-			for _, alpn := range hello.alpnProtocols {
-				if alpn == session.alpnProtocol {
-					hello.earlyData = true
-					break
-				}
+			if slices.Contains(hello.alpnProtocols, session.alpnProtocol) {
+				hello.earlyData = true
 			}
 		}
 	}
@@ -1007,10 +998,8 @@ func checkALPN(clientProtos []string, serverProto string, quic bool) error {
 	if len(clientProtos) == 0 {
 		return errors.New("tls: server advertised unrequested ALPN extension")
 	}
-	for _, proto := range clientProtos {
-		if proto == serverProto {
-			return nil
-		}
+	if slices.Contains(clientProtos, serverProto) {
+		return nil
 	}
 	return errors.New("tls: server selected unadvertised ALPN protocol")
 }
