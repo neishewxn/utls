@@ -9,12 +9,12 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/ecdh"
+	"crypto/hkdf"
 	"crypto/rand"
 	"errors"
 	"math/bits"
 
 	"github.com/metacubex/utls/internal/byteorder"
-	"github.com/metacubex/utls/internal/hkdf"
 	"golang.org/x/crypto/chacha20poly1305"
 )
 
@@ -32,7 +32,8 @@ func (kdf *hkdfKDF) LabeledExtract(sid []byte, salt []byte, label string, inputK
 	labeledIKM = append(labeledIKM, sid...)
 	labeledIKM = append(labeledIKM, label...)
 	labeledIKM = append(labeledIKM, inputKey...)
-	return hkdf.Extract(kdf.hash.New, labeledIKM, salt)
+	extract, _ := hkdf.Extract(kdf.hash.New, labeledIKM, salt)
+	return extract
 }
 
 func (kdf *hkdfKDF) LabeledExpand(suiteID []byte, randomKey []byte, label string, info []byte, length uint16) []byte {
@@ -42,7 +43,8 @@ func (kdf *hkdfKDF) LabeledExpand(suiteID []byte, randomKey []byte, label string
 	labeledInfo = append(labeledInfo, suiteID...)
 	labeledInfo = append(labeledInfo, label...)
 	labeledInfo = append(labeledInfo, info...)
-	return hkdf.Expand(kdf.hash.New, randomKey, string(labeledInfo), int(length))
+	expand, _ := hkdf.Expand(kdf.hash.New, randomKey, string(labeledInfo), int(length))
+	return expand
 }
 
 // dhKEM implements the KEM specified in RFC 9180, Section 4.1.

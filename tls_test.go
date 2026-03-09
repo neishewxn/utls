@@ -24,11 +24,10 @@ import (
 	"net"
 	"os"
 	"reflect"
+	"slices"
 	"strings"
 	"testing"
 	"time"
-
-	"golang.org/x/exp/slices"
 
 	"golang.org/x/crypto/cryptobyte"
 

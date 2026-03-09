@@ -9,6 +9,7 @@ import (
 	"context"
 	"crypto"
 	"crypto/ecdh"
+	"crypto/hkdf"
 	"crypto/hmac"
 	"crypto/mlkem"
 	"crypto/rsa"
@@ -16,11 +17,9 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"slices"
 	"time"
 
-	"golang.org/x/exp/slices"
-
-	"github.com/metacubex/utls/internal/hkdf"
 	"github.com/metacubex/utls/internal/tls13"
 )
 
@@ -104,8 +103,9 @@ func (hs *clientHandshakeStateTLS13) handshake() error {
 		confTranscript.Write(hs.serverHello.original[:30])
 		confTranscript.Write(make([]byte, 8))
 		confTranscript.Write(hs.serverHello.original[38:])
+		extract, _ := hkdf.Extract(hs.suite.hash.New, hs.echContext.innerHello.random, nil)
 		acceptConfirmation := tls13.ExpandLabel(hs.suite.hash.New,
-			hkdf.Extract(hs.suite.hash.New, hs.echContext.innerHello.random, nil),
+			extract,
 			"ech accept confirmation",
 			confTranscript.Sum(nil),
 			8,
@@ -283,8 +283,9 @@ func (hs *clientHandshakeStateTLS13) processHelloRetryRequest() error {
 			copy(hrrHello, hs.serverHello.original)
 			hrrHello = bytes.Replace(hrrHello, hs.serverHello.encryptedClientHello, make([]byte, 8), 1)
 			confTranscript.Write(hrrHello)
+			extract, _ := hkdf.Extract(hs.suite.hash.New, hs.echContext.innerHello.random, nil)
 			acceptConfirmation := tls13.ExpandLabel(hs.suite.hash.New,
-				hkdf.Extract(hs.suite.hash.New, hs.echContext.innerHello.random, nil),
+				extract,
 				"hrr ech accept confirmation",
 				confTranscript.Sum(nil),
 				8,

@@ -19,10 +19,9 @@ import (
 	"hash"
 	"io"
 	"net"
+	"slices"
 	"strings"
 	"time"
-
-	"golang.org/x/exp/slices"
 
 	"github.com/metacubex/utls/internal/byteorder"
 	"github.com/metacubex/utls/internal/fips140tls"

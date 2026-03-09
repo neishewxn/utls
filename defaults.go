@@ -5,7 +5,7 @@
 package tls
 
 import (
-	"golang.org/x/exp/slices"
+	"slices"
 	_ "unsafe" // for linkname
 )
 

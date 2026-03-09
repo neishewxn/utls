@@ -7,7 +7,7 @@ package tls
 import (
 	"errors"
 	"fmt"
-	"golang.org/x/exp/slices"
+	"slices"
 	"strings"
 
 	"golang.org/x/crypto/cryptobyte"

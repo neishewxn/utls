@@ -8,20 +8,19 @@ import (
 	"bytes"
 	"context"
 	"crypto"
+	"crypto/hkdf"
 	"crypto/hmac"
 	"crypto/mlkem"
 	"crypto/rsa"
 	"errors"
 	"hash"
 	"io"
+	"slices"
 	"sort"
 	"time"
 
-	"golang.org/x/exp/slices"
-
 	"github.com/metacubex/utls/internal/byteorder"
 	"github.com/metacubex/utls/internal/fips140tls"
-	"github.com/metacubex/utls/internal/hkdf"
 	"github.com/metacubex/utls/internal/hpke"
 	"github.com/metacubex/utls/internal/tls13"
 )
@@ -574,8 +573,9 @@ func (hs *serverHandshakeStateTLS13) doHelloRetryRequest(selectedGroup CurveID) 
 		if err := transcriptMsg(helloRetryRequest, confTranscript); err != nil {
 			return nil, err
 		}
+		extract, _ := hkdf.Extract(hs.suite.hash.New, hs.clientHello.random, nil)
 		acceptConfirmation := tls13.ExpandLabel(hs.suite.hash.New,
-			hkdf.Extract(hs.suite.hash.New, hs.clientHello.random, nil),
+			extract,
 			"hrr ech accept confirmation",
 			confTranscript.Sum(nil),
 			8,
@@ -737,8 +737,9 @@ func (hs *serverHandshakeStateTLS13) sendServerParameters() error {
 			return err
 		}
 		// compute the acceptance message
+		extract, _ := hkdf.Extract(hs.suite.hash.New, hs.clientHello.random, nil)
 		acceptConfirmation := tls13.ExpandLabel(hs.suite.hash.New,
-			hkdf.Extract(hs.suite.hash.New, hs.clientHello.random, nil),
+			extract,
 			"ech accept confirmation",
 			echTranscript.Sum(nil),
 			8,

@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"golang.org/x/exp/slices"
+	"slices"
 	"strings"
 
 	"github.com/metacubex/utls/internal/hpke"
