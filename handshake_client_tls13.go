@@ -10,16 +10,17 @@ import (
 	"crypto"
 	"crypto/ecdh"
 	"crypto/hmac"
+	"crypto/mlkem"
 	"crypto/rsa"
 	"crypto/subtle"
 	"errors"
 	"fmt"
-	"golang.org/x/exp/slices"
 	"hash"
 	"time"
 
+	"golang.org/x/exp/slices"
+
 	"github.com/metacubex/utls/internal/hkdf"
-	"github.com/metacubex/utls/internal/mlkem"
 	"github.com/metacubex/utls/internal/tls13"
 )
 

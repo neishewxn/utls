@@ -1,7 +1,7 @@
 package tls
 
 import (
-	"github.com/metacubex/utls/internal/mlkem"
+	"crypto/mlkem"
 
 	"golang.org/x/crypto/sha3"
 )

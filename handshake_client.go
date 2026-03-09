@@ -10,22 +10,23 @@ import (
 	"crypto"
 	"crypto/ecdsa"
 	"crypto/ed25519"
+	"crypto/mlkem"
 	"crypto/rsa"
 	"crypto/subtle"
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"golang.org/x/exp/slices"
 	"hash"
 	"io"
 	"net"
 	"strings"
 	"time"
 
+	"golang.org/x/exp/slices"
+
 	"github.com/metacubex/utls/internal/byteorder"
 	"github.com/metacubex/utls/internal/fips140tls"
 	"github.com/metacubex/utls/internal/hpke"
-	"github.com/metacubex/utls/internal/mlkem"
 	"github.com/metacubex/utls/internal/tls13"
 )
 

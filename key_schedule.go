@@ -7,11 +7,11 @@ package tls
 import (
 	"crypto/ecdh"
 	"crypto/hmac"
+	"crypto/mlkem"
 	"errors"
 	"hash"
 	"io"
 
-	"github.com/metacubex/utls/internal/mlkem"
 	"github.com/metacubex/utls/internal/tls13"
 )
 

@@ -8,6 +8,7 @@ import (
 	"crypto/cipher"
 	"crypto/ed25519"
 	"crypto/hmac"
+	"crypto/mlkem"
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/sha512"
@@ -22,7 +23,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/metacubex/utls/internal/mlkem"
 	"github.com/metacubex/utls/internal/ratelimit"
 
 	"golang.org/x/crypto/curve25519"

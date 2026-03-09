@@ -9,19 +9,20 @@ import (
 	"context"
 	"crypto"
 	"crypto/hmac"
+	"crypto/mlkem"
 	"crypto/rsa"
 	"errors"
-	"golang.org/x/exp/slices"
 	"hash"
 	"io"
 	"sort"
 	"time"
 
+	"golang.org/x/exp/slices"
+
 	"github.com/metacubex/utls/internal/byteorder"
 	"github.com/metacubex/utls/internal/fips140tls"
 	"github.com/metacubex/utls/internal/hkdf"
 	"github.com/metacubex/utls/internal/hpke"
-	"github.com/metacubex/utls/internal/mlkem"
 	"github.com/metacubex/utls/internal/tls13"
 )
 
