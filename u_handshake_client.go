@@ -14,9 +14,9 @@ import (
 
 	"github.com/andybalholm/brotli"
 	"github.com/klauspost/compress/zstd"
-	"github.com/metacubex/utls/internal/fips140tls"
-	"github.com/metacubex/utls/internal/hpke"
-	"github.com/metacubex/utls/internal/tls13"
+	"github.com/neishewxn/utls/internal/fips140tls"
+	"github.com/neishewxn/utls/internal/hpke"
+	"github.com/neishewxn/utls/internal/tls13"
 )
 
 // This function is called by (*clientHandshakeStateTLS13).readServerCertificate()

@@ -14,7 +14,7 @@ import (
 	"errors"
 	"math/bits"
 
-	"github.com/metacubex/utls/internal/byteorder"
+	"github.com/neishewxn/utls/internal/byteorder"
 	"golang.org/x/crypto/chacha20poly1305"
 )
 

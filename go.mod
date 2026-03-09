@@ -1,4 +1,4 @@
-module github.com/metacubex/utls
+module github.com/neishewxn/utls
 
 go 1.26
 

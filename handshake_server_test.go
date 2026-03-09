@@ -27,7 +27,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/metacubex/utls/internal/fips140tls"
+	"github.com/neishewxn/utls/internal/fips140tls"
 )
 
 func testClientHello(t *testing.T, serverConfig *Config, m handshakeMessage) {

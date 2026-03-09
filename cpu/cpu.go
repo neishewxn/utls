@@ -2,7 +2,7 @@ package cpu
 
 import _ "unsafe" // for linkname
 
-import "github.com/metacubex/utls/internal/cpu"
+import "github.com/neishewxn/utls/internal/cpu"
 
 type CacheLinePad = cpu.CacheLinePad
 

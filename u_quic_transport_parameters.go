@@ -6,7 +6,7 @@ import (
 	"math"
 	"math/big"
 
-	"github.com/metacubex/utls/internal/quicvarint"
+	"github.com/neishewxn/utls/internal/quicvarint"
 )
 
 const (
